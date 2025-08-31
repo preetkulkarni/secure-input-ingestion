@@ -1,4 +1,5 @@
-from pydantic import BaseModel, EmailStr, Field
+import re
+from pydantic import BaseModel, EmailStr, Field, field_validator
 from typing import Optional
 
 # documenation needed.
@@ -12,14 +13,20 @@ class UserBase(BaseModel):
     email: EmailStr = Field(..., example="user@example.com")
     username: str = Field(..., min_length=3, max_length=50, example="john_doe")
 
-class UserCreate(UserBase):
-    password: str = Field(
-        ...,
-        min_length=8,
-        example="Strong_Password123!",
-        regex=PASSWORD_REGEX,
-        description="Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character."
-    )
+class UserCreate(BaseModel):
+    email: EmailStr = Field(..., example="user@example.com")
+    username: str = Field(..., min_length=3, max_length=50, example="john_doe")
+    password: str = Field(..., min_length=8, example="Strong_Password123!")
+
+    @field_validator('password')
+    def validate_password_strength(cls, v):
+        if not re.match(PASSWORD_REGEX, v):
+            raise ValueError(
+                'Password must be at least 8 characters long and '
+                'contain at least one uppercase letter, one lowercase letter, '
+                'one digit, and one special character.'
+            )
+        return v
 
 class UserInDB(UserBase):
     hashed_password: str
