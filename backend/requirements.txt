@@ -7,3 +7,7 @@ pymongo
 python-dotenv
 pydantic-settings
 python-multipart
+bcrypt
+celery[redis]
+python-multipart 
+python-magic

@@ -4,7 +4,7 @@ from typing import Optional
 
 # documenation needed.
 
-PASSWORD_REGEX = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
+PASSWORD_REGEX = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&_])[A-Za-z\d@$!%*#?&_]{8,}$"
 
 class UserBase(BaseModel):
     """
@@ -13,9 +13,7 @@ class UserBase(BaseModel):
     email: EmailStr = Field(..., example="user@example.com")
     username: str = Field(..., min_length=3, max_length=50, example="john_doe")
 
-class UserCreate(BaseModel):
-    email: EmailStr = Field(..., example="user@example.com")
-    username: str = Field(..., min_length=3, max_length=50, example="john_doe")
+class UserCreate(UserBase):
     password: str = Field(..., min_length=8, example="Strong_Password123!")
 
     @field_validator('password')
